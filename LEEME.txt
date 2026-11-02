@@ -1,0 +1,4 @@
+Mi Momento - versión inicial de prueba
+
+Sube estos archivos a la raíz del repositorio GitHub mi-momento.
+Después activaremos el alojamiento web. Esta versión guarda datos localmente en el navegador y NO está lista aún para comercialización. Exporta copias de seguridad.

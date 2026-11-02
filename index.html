@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e9e5da">
+<meta name="description" content="Mi Momento: organiza, crea y siéntete bien. Tu espacio personal y privado.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Mi Momento</title>
+<style>
+:root{--bg:#f4f1e9;--paper:#fffdf8;--ink:#343a35;--muted:#73786f;--accent:#718675;--accent2:#dce4d9;--line:#e5e1d7;--shadow:0 8px 26px #343a3510}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:86px}
+header{padding:24px 20px 14px;max-width:760px;margin:auto}header small{color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:700}h1{font-family:Georgia,serif;font-size:32px;font-weight:500;margin:5px 0}header p{margin:0;color:var(--muted);font-size:14px}
+main{max-width:760px;margin:auto;padding:0 16px 30px}.screen{display:none}.screen.active{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0;box-shadow:var(--shadow)}
+h2{font-size:19px;margin:0 0 12px;font-weight:650}h3{font-size:15px;margin:0 0 9px}p{line-height:1.45}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fffefa;color:var(--ink);font:inherit;margin:5px 0 9px}
+textarea{min-height:76px;resize:vertical}button{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:white;font:inherit;font-weight:600;cursor:pointer}
+button.secondary{background:var(--accent2);color:var(--ink)}button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button.small{padding:7px 10px;font-size:12px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.muted{color:var(--muted);font-size:13px}.task{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}.task input{width:auto;margin:0}.task span{flex:1}.task.done span{text-decoration:line-through;color:var(--muted)}
+.pills{display:flex;flex-wrap:wrap;gap:7px}.pill{padding:8px 11px;border-radius:20px;background:var(--accent2);color:var(--ink);font-size:13px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fffdf8f2;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:5}
+nav button{background:transparent;color:var(--muted);font-size:11px;padding:7px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;max-width:110px}nav button.active{color:var(--accent);background:var(--accent2)}nav b{font-size:18px;font-weight:500}
+.theme-list{display:flex;gap:8px;flex-wrap:wrap}.theme{width:34px;height:34px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px var(--line)}.theme[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+footer{max-width:760px;margin:12px auto;padding:0 18px;color:var(--muted);font-size:11px;text-align:center}
+</style>
+</head>
+<body>
+<header><small>Tu espacio personal</small><h1>Mi Momento</h1><p>Organiza · Crea · Siéntete bien</p></header>
+<main>
+<section id="inicio" class="screen active">
+ <div class="card"><h2>Hola, este es tu momento 🌿</h2><p class="muted">Un pequeño espacio para ordenar tus ideas y cuidar de ti.</p><label for="todayGoal"><b>Mi objetivo para hoy es…</b></label><input id="todayGoal" placeholder="¿Qué te gustaría conseguir hoy?"><button onclick="saveGoal()">Guardar objetivo</button></div>
+ <div class="card"><h2>Tu día, poco a poco</h2><div id="homeTasks" class="muted">Añade tus primeras tareas en Agenda.</div></div>
+ <div class="card"><h2>¿Cómo te encuentras?</h2><div class="pills"><button class="secondary" onclick="setMood('Genial')">😊 Genial</button><button class="secondary" onclick="setMood('Bien')">🙂 Bien</button><button class="secondary" onclick="setMood('Normal')">😐 Normal</button><button class="secondary" onclick="setMood('Triste')">🙁 Triste</button><button class="secondary" onclick="setMood('Agobio')">😮‍💨 Agobio</button></div><p id="moodSaved" class="muted"></p></div>
+</section>
+<section id="agenda" class="screen">
+ <div class="card"><h2>Mi agenda</h2><label for="taskDate">Día</label><input id="taskDate" type="date"><label for="taskText">Cosas que tengo pendientes</label><div class="row"><input id="taskText" placeholder="Añadir una tarea"><button onclick="addTask()">Añadir</button></div><div id="taskList"></div></div>
+ <div class="card"><h3>Cosas que quiero hacer</h3><textarea id="wishes" placeholder="Planes, ideas y cosas que te apetece hacer…"></textarea><button onclick="saveText('wishes')">Guardar</button></div>
+ <div class="card"><h3>Algo que quiero hacer por mí</h3><textarea id="selfcare" placeholder="Un paseo, descansar, leer…"></textarea><button onclick="saveText('selfcare')">Guardar</button></div>
+ <div class="card"><h3>No quiero olvidar</h3><textarea id="remember" placeholder="Anota aquí lo importante…"></textarea><button onclick="saveText('remember')">Guardar</button></div>
+ <div class="card"><h3>Mis pequeños logros</h3><textarea id="wins" placeholder="Cualquier avance cuenta…"></textarea><button onclick="saveText('wins')">Guardar</button></div>
+</section>
+<section id="crear" class="screen">
+ <div class="card"><h2>Mi espacio creativo</h2><p class="muted">Guarda ideas, frases, listas o pequeños bocetos escritos. En una siguiente versión añadiremos el lienzo para dibujar con el dedo y las pegatinas.</p><textarea id="creative" placeholder="Deja volar tus ideas…"></textarea><button onclick="saveText('creative')">Guardar mi página</button></div>
+</section>
+<section id="bienestar" class="screen">
+ <div class="card"><h2>Un momento para ti</h2><p>Hoy no tienes que hacerlo todo. Un paso pequeño también es avanzar.</p><h3>Mi estado de ánimo</h3><div class="pills"><button class="secondary" onclick="setMood('En calma')">🌱 En calma</button><button class="secondary" onclick="setMood('Con energía')">☀️ Con energía</button><button class="secondary" onclick="setMood('Necesito parar')">🍃 Necesito parar</button></div><p id="wellMood" class="muted"></p></div>
+ <div class="card"><h3>Una frase para hoy</h3><p id="affirmation">No necesito hacerlo todo hoy; solo dar el siguiente paso.</p><button class="secondary" onclick="newAffirmation()">Otra frase</button></div>
+</section>
+<section id="diario" class="screen">
+ <div class="card"><h2>Mi diario</h2><label for="diaryDate">Fecha</label><input type="date" id="diaryDate"><textarea id="diaryText" placeholder="¿Qué te gustaría dejar escrito hoy?"></textarea><button onclick="saveDiary()">Guardar entrada</button></div><div class="card"><h3>Mis entradas</h3><div id="diaryEntries" class="muted">Todavía no hay entradas.</div></div>
+</section>
+<section id="ajustes" class="screen">
+ <div class="card"><h2>Personaliza Mi Momento</h2><p class="muted">Elige el ambiente que más te guste.</p><div class="theme-list" id="themes"></div></div>
+ <div class="card"><h2>Tu privacidad</h2><p>Esta versión guarda la información en este dispositivo. No hay cuenta ni sincronización en la nube.</p><p class="muted">Haz copias de seguridad periódicas. Si borras los datos del navegador o pierdes el dispositivo, podrías perder tus notas.</p><div class="row"><button onclick="exportData()">Exportar copia</button><button class="secondary" onclick="document.getElementById('importFile').click()">Importar copia</button></div><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><button class="ghost" onclick="clearData()">Borrar todos mis datos</button></div>
+</section>
+</main>
+<nav>
+<button class="active" data-screen="inicio" onclick="showScreen('inicio',this)"><b>⌂</b>Inicio</button>
+<button data-screen="agenda" onclick="showScreen('agenda',this)"><b>▦</b>Agenda</button>
+<button data-screen="crear" onclick="showScreen('crear',this)"><b>✎</b>Crear</button>
+<button data-screen="bienestar" onclick="showScreen('bienestar',this)"><b>♡</b>Bienestar</button>
+<button data-screen="diario" onclick="showScreen('diario',this)"><b>▤</b>Diario</button>
+<button data-screen="ajustes" onclick="showScreen('ajustes',this)"><b>⚙</b>Ajustes</button>
+</nav>
+<footer>Mi Momento · Versión inicial de prueba</footer>
+<script>
+const KEY='miMomentoStarterData';
+let data={goal:'',tasks:[],wishes:'',selfcare:'',remember:'',wins:'',creative:'',mood:'',diary:[],theme:'natural'};
+function load(){try{data={...data,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){};document.getElementById('todayGoal').value=data.goal||'';['wishes','selfcare','remember','wins','creative'].forEach(k=>document.getElementById(k).value=data[k]||'');document.getElementById('taskDate').value=new Date().toISOString().slice(0,10);document.getElementById('diaryDate').value=new Date().toISOString().slice(0,10);renderTasks();renderDiary();applyTheme(data.theme);document.getElementById('moodSaved').textContent=data.mood?'Último estado guardado: '+data.mood:''}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
+function showScreen(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===btn));if(id==='ajustes')renderThemes()}
+function saveGoal(){data.goal=document.getElementById('todayGoal').value;persist();alert('Objetivo guardado')}
+function addTask(){let t=document.getElementById('taskText').value.trim();if(!t)return;data.tasks.push({id:Date.now(),text:t,date:document.getElementById('taskDate').value,done:false});document.getElementById('taskText').value='';persist();renderTasks()}
+function toggleTask(id){let t=data.tasks.find(x=>x.id===id);if(t)t.done=!t.done;persist();renderTasks()}
+function removeTask(id){data.tasks=data.tasks.filter(x=>x.id!==id);persist();renderTasks()}
+function renderTasks(){let list=document.getElementById('taskList');if(!list)return;let date=document.getElementById('taskDate').value;let items=data.tasks.filter(t=>t.date===date);list.innerHTML=items.length?'':'<p class="muted">No tienes tareas para este día.</p>';items.forEach(t=>{let d=document.createElement('div');d.className='task'+(t.done?' done':'');let c=document.createElement('input');c.type='checkbox';c.checked=t.done;c.onchange=()=>toggleTask(t.id);let s=document.createElement('span');s.textContent=t.text;let b=document.createElement('button');b.className='ghost small';b.textContent='×';b.onclick=()=>removeTask(t.id);d.append(c,s,b);list.append(d)});let home=document.getElementById('homeTasks');if(home){let today=new Date().toISOString().slice(0,10),ts=data.tasks.filter(t=>t.date===today);home.textContent=ts.length?ts.filter(t=>!t.done).length+' tareas pendientes de '+ts.length:'Añade tus primeras tareas en Agenda.'}}
+function saveText(k){data[k]=document.getElementById(k).value;persist();alert('Guardado')}
+function setMood(m){data.mood=m;persist();document.getElementById('moodSaved').textContent='Hoy te sientes: '+m;document.getElementById('wellMood').textContent='Has indicado: '+m}
+function newAffirmation(){let a=['Voy a mi ritmo y eso está bien.','También merezco el tiempo que dedico a los demás.','Un paso pequeño sigue siendo un paso.','Puedo parar, respirar y volver a empezar.'];document.getElementById('affirmation').textContent=a[Math.floor(Math.random()*a.length)]}
+function saveDiary(){let date=document.getElementById('diaryDate').value,text=document.getElementById('diaryText').value.trim();if(!text)return;data.diary.unshift({date,text});persist();document.getElementById('diaryText').value='';renderDiary()}
+function renderDiary(){let el=document.getElementById('diaryEntries');if(!el)return;el.innerHTML='';if(!data.diary.length){el.textContent='Todavía no hay entradas.';return}data.diary.forEach((e,i)=>{let d=document.createElement('div');d.className='card';let h=document.createElement('b');h.textContent=e.date;let p=document.createElement('p');p.textContent=e.text;let b=document.createElement('button');b.className='ghost small';b.textContent='Eliminar';b.onclick=()=>{data.diary.splice(i,1);persist();renderDiary()};d.append(h,p,b);el.append(d)})}
+const themes={natural:['#f4f1e9','#fffdf8','#343a35','#718675','#dce4d9'],azul:['#edf2f5','#ffffff','#263746','#527d98','#dce8ef'],tierra:['#f3eee7','#fffaf4','#40372f','#9a765b','#e9ddd0'],lavanda:['#f1eff5','#fffaff','#393544','#82749b','#e6e0ef'],rosa:['#f5efed','#fffaf8','#403735','#a17c79','#eadbd8']};
+function applyTheme(k){let t=themes[k]||themes.natural;['--bg','--paper','--ink','--accent','--accent2'].forEach((v,i)=>document.documentElement.style.setProperty(v,t[i]));data.theme=k;persist()}
+function renderThemes(){let el=document.getElementById('themes');el.innerHTML='';Object.keys(themes).forEach(k=>{let b=document.createElement('button');b.className='theme';b.title=k;b.style.background=themes[k][3];b.setAttribute('aria-pressed',String(data.theme===k));b.onclick=()=>{applyTheme(k);renderThemes()};el.append(b)})}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mi-momento-copia.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{data={...data,...JSON.parse(r.result)};persist();load();alert('Copia importada')}catch(err){alert('No se ha podido leer la copia')}};r.readAsText(f)}
+function clearData(){if(confirm('¿Seguro que quieres borrar todos tus datos de este dispositivo?')){localStorage.removeItem(KEY);data={goal:'',tasks:[],wishes:'',selfcare:'',remember:'',wins:'',creative:'',mood:'',diary:[],theme:'natural'};load()}}
+document.getElementById('taskDate').addEventListener('change',renderTasks);load();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
